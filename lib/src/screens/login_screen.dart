@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat/src/Widgets/app_button.dart';
 import 'package:flutter_chat/src/Widgets/app_icon.dart';
+import 'package:flutter_chat/src/Widgets/app_textfield.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = '/login';
@@ -8,22 +9,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextField getTextField(String inputText) {
-    return TextField(
-        decoration: InputDecoration(
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-            hintText: inputText,
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                borderSide:
-                    BorderSide(color: Colors.lightBlueAccent, width: 2.0)),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                borderSide:
-                    BorderSide(color: Colors.lightBlueAccent, width: 2.0))));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,11 +22,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 48.0,
                 ),
-                getTextField("Ingresar Email"),
+                AppTextfield(inputText: "Ingresar Email"),
                 SizedBox(
                   height: 8.0,
                 ),
-                getTextField("Ingresar Contraseña"),
+                AppTextfield(inputText: "Ingresar Contraseña"),
                 SizedBox(
                   height: 23.0,
                 ),
