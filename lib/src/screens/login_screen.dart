@@ -9,6 +9,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  late final _password;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,11 +23,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 48.0,
                 ),
-                AppTextfield(inputText: "Ingresar Email"),
+                AppTextfield(
+                    inputText: "Ingresar Email",
+                    obscureText: false,
+                    onChanged: (value) {
+                      _password = value;
+                    }),
                 SizedBox(
                   height: 8.0,
                 ),
-                AppTextfield(inputText: "Ingresar Contraseña"),
+                AppTextfield(
+                    inputText: "Ingresar Contraseña",
+                    obscureText: true,
+                    onChanged: (value) {
+                      _password = value;
+                    }),
                 SizedBox(
                   height: 23.0,
                 ),
