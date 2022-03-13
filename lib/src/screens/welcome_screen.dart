@@ -15,8 +15,9 @@ class welcomeScreen extends StatefulWidget {
 class _welcomeScreenState extends State<welcomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(future: Firebase.initializeApp()
-        , builder: (context, snapshot) {
+    return FutureBuilder(
+        future: Firebase.initializeApp(),
+        builder: (context, snapshot) {
           return Scaffold(
               body: Container(
                   padding: EdgeInsets.symmetric(horizontal: 25.0),
@@ -43,7 +44,6 @@ class _welcomeScreenState extends State<welcomeScreen> {
                     ],
                   )));
         });
-
   }
 }
 

@@ -45,9 +45,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           ),
           AppButton(
             color: Colors.blueAccent,
-            onPressed: () {
+            onPressed: () async {
               try {
-                var newUser = auth.createUserWithEmailAndPassword(
+                var newUser = await auth.createUserWithEmailAndPassword(
                     email: _email, password: _password);
                 if (newUser != null) {
                   Navigator.pushNamed(context, '/chat');
