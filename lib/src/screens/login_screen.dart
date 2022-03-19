@@ -12,6 +12,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   late String _email;
   late String _password;
+  final TextEditingController emailFieldController = TextEditingController();
+  final TextEditingController passwordFieldController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,20 +29,24 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 48.0,
                 ),
                 AppTextfield(
-                    inputText: "Ingresar Email",
-                    obscureText: false,
-                    onChanged: (value) {
-                      _email = value;
-                    }),
+                  inputText: "Ingresar Email",
+                  obscureText: false,
+                  onChanged: (value) {
+                    _email = value;
+                  },
+                  controller: emailFieldController,
+                ),
                 SizedBox(
                   height: 8.0,
                 ),
                 AppTextfield(
-                    inputText: "Ingresar Contraseña",
-                    obscureText: true,
-                    onChanged: (value) {
-                      _password = value;
-                    }),
+                  inputText: "Ingresar Contraseña",
+                  obscureText: true,
+                  onChanged: (value) {
+                    _password = value;
+                  },
+                  controller: passwordFieldController,
+                ),
                 SizedBox(
                   height: 23.0,
                 ),
@@ -50,6 +57,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           .logInUser(email: _email, password: _password);
                       if (user != null) {
                         Navigator.pushNamed(context, '/chat');
+                        // emailFieldController.text = '';
+                        passwordFieldController.text = '';
                       }
                     },
                     name: 'Log in')

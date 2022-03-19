@@ -14,6 +14,9 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   late String _email;
   late String _password;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,18 +31,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             height: 48.0,
           ),
           AppTextfield(
-              inputText: "Ingresar Email",
-              obscureText: false,
-              onChanged: (value) {
-                _email = value;
-              }),
+            inputText: "Ingresar Email",
+            obscureText: false,
+            onChanged: (value) {
+              _email = value;
+            },
+            controller: emailController,
+          ),
           SizedBox(height: 8.0),
           AppTextfield(
-              inputText: "Ingresar contraseña",
-              obscureText: true,
-              onChanged: (value) {
-                _password = value;
-              }),
+            inputText: "Ingresar contraseña",
+            obscureText: true,
+            onChanged: (value) {
+              _password = value;
+            },
+            controller: passwordController,
+          ),
           SizedBox(
             height: 48.0,
           ),
@@ -50,6 +57,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   .createUser(email: _email, password: _password);
               if (newUser != null) {
                 Navigator.pushNamed(context, '/chat');
+                emailController.text = "";
+                passwordController.text = "";
               }
             },
             name: "Registrarse",

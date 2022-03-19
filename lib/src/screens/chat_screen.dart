@@ -13,10 +13,13 @@ class _ChatScreenState extends State<ChatScreen> {
   late User? currentUser;
 
   @override
-  Future<void> initState() async {
+  void initState() {
     super.initState();
+    getCurrentUser();
+  }
+
+  void getCurrentUser() async {
     currentUser = await Authenticator().getCurrentUser();
-    print(currentUser?.email);
   }
 
   @override
