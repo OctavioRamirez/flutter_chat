@@ -12,8 +12,18 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   late String _email;
   late String _password;
-  final TextEditingController emailFieldController = TextEditingController();
-  final TextEditingController passwordFieldController = TextEditingController();
+  final TextEditingController _emailFieldController = TextEditingController();
+  final TextEditingController _passwordFieldController =
+      TextEditingController();
+  final FocusNode _focusNodeEmail = FocusNode();
+  final FocusNode _focusNodePassword = FocusNode();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _focusNodeEmail.dispose();
+    _focusNodePassword.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,18 +44,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   onChanged: (value) {
                     _email = value;
                   },
-                  controller: emailFieldController,
+                  controller: _emailFieldController,
+                  focusNode: _focusNodeEmail,
                 ),
                 SizedBox(
                   height: 8.0,
                 ),
                 AppTextfield(
+                  focusNode: _focusNodePassword,
                   inputText: "Ingresar Contraseña",
                   obscureText: true,
                   onChanged: (value) {
                     _password = value;
                   },
-                  controller: passwordFieldController,
+                  controller: _passwordFieldController,
                 ),
                 SizedBox(
                   height: 23.0,
@@ -57,8 +69,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           .logInUser(email: _email, password: _password);
                       if (user != null) {
                         Navigator.pushNamed(context, '/chat');
-                        // emailFieldController.text = '';
-                        passwordFieldController.text = '';
+                        // _emailFieldController.text = '';
+                        _passwordFieldController.text = '';
+
+                        if (_emailFieldController.text.isNotEmpty) {
+                          FocusScope.of(context)
+                              .requestFocus(_focusNodePassword);
+                        } else {
+                          FocusScope.of(context).requestFocus(_focusNodeEmail);
+                        }
                       }
                     },
                     name: 'Log in')
