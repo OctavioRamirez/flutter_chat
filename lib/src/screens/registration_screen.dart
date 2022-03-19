@@ -3,6 +3,7 @@ import 'package:flutter_chat/src/Widgets/app_button.dart';
 import 'package:flutter_chat/src/Widgets/app_icon.dart';
 import 'package:flutter_chat/src/Widgets/app_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_chat/src/services/authentication.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const String routerName = '/registration';
@@ -11,7 +12,6 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  final auth = FirebaseAuth.instance;
   late String _email;
   late String _password;
   @override
@@ -46,14 +46,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           AppButton(
             color: Colors.blueAccent,
             onPressed: () async {
-              try {
-                var newUser = await auth.createUserWithEmailAndPassword(
-                    email: _email, password: _password);
-                if (newUser != null) {
-                  Navigator.pushNamed(context, '/chat');
-                }
-              } catch (e) {
-                print(e);
+              var newUser = await Authenticator()
+                  .createUser(email: _email, password: _password);
+              if (newUser != null) {
+                Navigator.pushNamed(context, '/chat');
               }
             },
             name: "Registrarse",
