@@ -22,9 +22,15 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Chat Screen'),
-      ),
+      appBar: AppBar(title: Text('Chat Screen'), actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.power_settings_new),
+          onPressed: () async {
+            await Authenticator().logOutUser();
+            Navigator.pop(context);
+          },
+        )
+      ]),
     );
   }
 }

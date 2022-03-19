@@ -30,4 +30,12 @@ class Authenticator {
       throw Exception(e);
     }
   }
+
+  Future<void> logOutUser() async {
+    try {
+      return await _auth.signOut();
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }
