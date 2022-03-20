@@ -23,6 +23,8 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
     _focusNodeEmail.dispose();
     _focusNodePassword.dispose();
+    _emailFieldController.dispose();
+    _passwordFieldController.dispose();
   }
 
   @override

@@ -14,8 +14,17 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   late String _email;
   late String _password;
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final FocusNode _focusNodeEmail = FocusNode();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _focusNodeEmail.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +46,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               _email = value;
             },
             controller: _emailController,
+            focusNode: _focusNodeEmail,
           ),
           SizedBox(height: 8.0),
           AppTextfield(
@@ -59,6 +69,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 Navigator.pushNamed(context, '/chat');
                 _emailController.text = "";
                 _passwordController.text = "";
+                FocusScope.of(context).requestFocus(_focusNodeEmail);
               }
             },
             name: "Registrarse",
