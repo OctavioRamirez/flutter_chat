@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat/src/Widgets/app_button.dart';
 import 'package:flutter_chat/src/Widgets/app_icon.dart';
 import 'package:flutter_chat/src/Widgets/app_textfield.dart';
+import 'package:flutter_chat/src/mixins/validation_mixin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_chat/src/services/authentication.dart';
 
@@ -11,7 +12,8 @@ class RegistrationScreen extends StatefulWidget {
   State<RegistrationScreen> createState() => _RegistrationScreenState();
 }
 
-class _RegistrationScreenState extends State<RegistrationScreen> {
+class _RegistrationScreenState extends State<RegistrationScreen>
+    with ValidationMixins {
   late String _email;
   late String _password;
   final TextEditingController _emailController = TextEditingController();
@@ -41,6 +43,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           ),
           AppTextfield(
             inputText: "Ingresar Email",
+            validator: validateEmail,
             obscureText: false,
             onChanged: (value) {
               _email = value;
@@ -51,6 +54,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           SizedBox(height: 8.0),
           AppTextfield(
             inputText: "Ingresar contraseña",
+            validator: validatePassword,
             obscureText: true,
             onChanged: (value) {
               _password = value;

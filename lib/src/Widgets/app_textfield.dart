@@ -13,7 +13,7 @@ class AppTextfield extends StatelessWidget {
       required this.onChanged,
       required this.obscureText,
       required this.controller,
-      required this.focusNode,
+      this.focusNode,
       required this.validator});
 
   @override
