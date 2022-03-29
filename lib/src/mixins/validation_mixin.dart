@@ -5,7 +5,7 @@ class ValidationMixins {
   }
 
   String? validatePassword(String? value) {
-    if (value != null && !(value.length > 5)) return "contraseña invalida";
+    if (value != null && value.length < 6) return "contraseña invalida";
     return null;
   }
 }
