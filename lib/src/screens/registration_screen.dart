@@ -14,12 +14,11 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen>
     with ValidationMixins {
-  late String _email;
-  late String _password;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _focusNodeEmail = FocusNode();
-
+  bool _autoValidate = false;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void dispose() {
     super.dispose();
@@ -31,55 +30,71 @@ class _RegistrationScreenState extends State<RegistrationScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-      padding: EdgeInsets.symmetric(horizontal: 24.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          AppIcon(),
-          SizedBox(
-            height: 48.0,
-          ),
-          AppTextfield(
-            inputText: "Ingresar Email",
-            validator: validateEmail,
-            obscureText: false,
-            onChanged: (value) {
-              _email = value;
-            },
-            controller: _emailController,
-            focusNode: _focusNodeEmail,
-          ),
-          SizedBox(height: 8.0),
-          AppTextfield(
-            inputText: "Ingresar contraseña",
-            validator: validatePassword,
-            obscureText: true,
-            onChanged: (value) {
-              _password = value;
-            },
-            controller: _passwordController,
-          ),
-          SizedBox(
-            height: 48.0,
-          ),
-          AppButton(
-            color: Colors.blueAccent,
-            onPressed: () async {
-              var newUser = await Authenticator()
-                  .createUser(email: _email, password: _password);
-              if (newUser != null) {
-                Navigator.pushNamed(context, '/chat');
-                _emailController.text = "";
-                _passwordController.text = "";
-                FocusScope.of(context).requestFocus(_focusNodeEmail);
-              }
-            },
-            name: "Registrarse",
-          )
-        ],
-      ),
-    ));
+        body: Form(
+            key: _formKey,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  AppIcon(),
+                  SizedBox(
+                    height: 48.0,
+                  ),
+                  _emailField(),
+                  SizedBox(height: 8.0),
+                  _passwordField(),
+                  SizedBox(
+                    height: 48.0,
+                  ),
+                  _submitButton()
+                ],
+              ),
+            )));
+  }
+
+  Widget _emailField() {
+    return AppTextfield(
+      inputText: "Ingresar Email",
+      validator: validateEmail,
+      obscureText: false,
+      onChanged: (value) {},
+      controller: _emailController,
+      focusNode: _focusNodeEmail,
+      autoValidate: true,
+    );
+  }
+
+  Widget _passwordField() {
+    return AppTextfield(
+      inputText: "Ingresar contraseña",
+      validator: validatePassword,
+      obscureText: true,
+      onChanged: (value) {},
+      controller: _passwordController,
+      autoValidate: true,
+    );
+  }
+
+  Widget _submitButton() {
+    return AppButton(
+      color: Colors.blueAccent,
+      onPressed: () async {
+        if (_formKey.currentState!.validate()) {
+          var newUser = await Authenticator().createUser(
+              email: _emailController.text, password: _passwordController.text);
+          if (newUser != null) {
+            Navigator.pushNamed(context, '/chat');
+          }
+          _emailController.text = "";
+          _passwordController.text = "";
+          FocusScope.of(context).requestFocus(_focusNodeEmail);
+        } else {
+          setState(() => _autoValidate = true);
+        }
+      },
+      name: "Registrarse",
+    );
   }
 }

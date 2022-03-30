@@ -23,6 +23,7 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixins {
   final FocusNode _focusNodeEmail = FocusNode();
   final FocusNode _focusNodePassword = FocusNode();
   bool _isLoading = false;
+  bool _autoValidate = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void dispose() {
@@ -78,6 +79,7 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixins {
       controller: _emailFieldController,
       validator: validateEmail,
       focusNode: _focusNodeEmail,
+      autoValidate: _autoValidate,
     );
   }
 
@@ -89,6 +91,7 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixins {
       obscureText: true,
       onChanged: (value) {},
       controller: _passwordFieldController,
+      autoValidate: _autoValidate,
     );
   }
 
@@ -112,6 +115,8 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixins {
                 FocusScope.of(context).requestFocus(_focusNodeEmail);
               }
               toggleSpinner(false);
+            } else {
+              setState(() => _autoValidate = true);
             }
           }
         },
