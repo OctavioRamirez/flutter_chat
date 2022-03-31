@@ -21,7 +21,13 @@ class AppTextfield extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      autovalidateMode: AutovalidateMode.always,
+      // autoValidate esta deprecado y se tiene que usar autovalidateMode
+      // onUserInteraction se activa cuando se modifica algo en el input
+      // always verifica siempre
+      // disabled verifica nunca
+      autovalidateMode: autoValidate
+          ? AutovalidateMode.onUserInteraction
+          : AutovalidateMode.disabled,
       validator: validator,
       focusNode: focusNode,
       controller: controller,

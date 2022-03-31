@@ -3,6 +3,7 @@ import 'package:flutter_chat/src/Widgets/app_button.dart';
 import 'package:flutter_chat/src/Widgets/app_icon.dart';
 import 'package:flutter_chat/src/Widgets/app_textfield.dart';
 import 'package:flutter_chat/src/mixins/validation_mixin.dart';
+import 'package:flutter_chat/src/model/authentication_request.dart';
 import 'package:flutter_chat/src/services/authentication.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
@@ -23,7 +24,6 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixins {
   final FocusNode _focusNodeEmail = FocusNode();
   final FocusNode _focusNodePassword = FocusNode();
   bool _isLoading = false;
-  bool _autoValidate = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void dispose() {
@@ -38,6 +38,21 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixins {
     setState(() {
       _isLoading = status;
     });
+  }
+
+  // funcion temporal para mostrar el error
+  void _showSnackBarMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        action: SnackBarAction(
+          label: 'Esconder',
+          onPressed: () {
+            // Code to execute.
+          },
+        ),
+      ),
+    );
   }
 
   @override
@@ -78,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixins {
       controller: _emailFieldController,
       validator: validateEmail,
       focusNode: _focusNodeEmail,
-      autoValidate: _autoValidate,
+      autoValidate: true,
     );
   }
 
@@ -90,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixins {
       obscureText: true,
       onChanged: (value) {},
       controller: _passwordFieldController,
-      autoValidate: _autoValidate,
+      autoValidate: true,
     );
   }
 
@@ -100,11 +115,11 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixins {
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
             toggleSpinner(true);
-            var user = await Authenticator()
-                .logInUser(
-                    email: _emailFieldController.text,
-                    password: _passwordFieldController.text)
-                .then((_) {
+            var authRequest = await Authenticator().logInUser(
+                email: _emailFieldController.text,
+                password: _passwordFieldController.text);
+
+            if (authRequest.success) {
               Navigator.pushNamed(context, '/chat');
               // _emailFieldController.text = '';
               _passwordFieldController.text = '';
@@ -114,10 +129,9 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixins {
               } else {
                 FocusScope.of(context).requestFocus(_focusNodeEmail);
               }
-            }).catchError((e) {
-              print(e);
-              setState(() => _autoValidate = true);
-            });
+            } else {
+              _showSnackBarMessage(authRequest.errorMessage);
+            }
 
             toggleSpinner(false);
           }

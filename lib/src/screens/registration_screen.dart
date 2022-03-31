@@ -19,7 +19,6 @@ class _RegistrationScreenState extends State<RegistrationScreen>
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _focusNodeEmail = FocusNode();
   bool _isLoading = false;
-  bool _autoValidate = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void dispose() {
@@ -33,6 +32,21 @@ class _RegistrationScreenState extends State<RegistrationScreen>
     setState(() {
       _isLoading = status;
     });
+  }
+
+  // funcion temporal para mostrar el error
+  void _showSnackBarMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        action: SnackBarAction(
+          label: 'Esconder',
+          onPressed: () {
+            // Code to execute.
+          },
+        ),
+      ),
+    );
   }
 
   @override
@@ -71,7 +85,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
       onChanged: (value) {},
       controller: _emailController,
       focusNode: _focusNodeEmail,
-      autoValidate: _autoValidate,
+      autoValidate: true,
     );
   }
 
@@ -82,7 +96,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
       obscureText: true,
       onChanged: (value) {},
       controller: _passwordController,
-      autoValidate: _autoValidate,
+      autoValidate: true,
     );
   }
 
@@ -92,19 +106,17 @@ class _RegistrationScreenState extends State<RegistrationScreen>
       onPressed: () async {
         toggleSpinner(true);
         if (_formKey.currentState!.validate()) {
-          var newUser = await Authenticator()
-              .createUser(
-                  email: _emailController.text,
-                  password: _passwordController.text)
-              .then((_) {
+          var authRequest = await Authenticator().createUser(
+              email: _emailController.text, password: _passwordController.text);
+
+          if (authRequest.success) {
             _emailController.text = "";
             _passwordController.text = "";
             FocusScope.of(context).requestFocus(_focusNodeEmail);
             Navigator.pushNamed(context, '/chat');
-          }).catchError((e) {
-            print(e);
-            setState(() => _autoValidate = true);
-          });
+          } else {
+            _showSnackBarMessage(authRequest.errorMessage);
+          }
         }
         toggleSpinner(false);
       },
