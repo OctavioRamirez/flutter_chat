@@ -92,16 +92,19 @@ class _RegistrationScreenState extends State<RegistrationScreen>
       onPressed: () async {
         toggleSpinner(true);
         if (_formKey.currentState!.validate()) {
-          var newUser = await Authenticator().createUser(
-              email: _emailController.text, password: _passwordController.text);
-          if (newUser != null) {
+          var newUser = await Authenticator()
+              .createUser(
+                  email: _emailController.text,
+                  password: _passwordController.text)
+              .then((_) {
+            _emailController.text = "";
+            _passwordController.text = "";
+            FocusScope.of(context).requestFocus(_focusNodeEmail);
             Navigator.pushNamed(context, '/chat');
-          }
-          _emailController.text = "";
-          _passwordController.text = "";
-          FocusScope.of(context).requestFocus(_focusNodeEmail);
-        } else {
-          setState(() => _autoValidate = true);
+          }).catchError((e) {
+            print(e);
+            setState(() => _autoValidate = true);
+          });
         }
         toggleSpinner(false);
       },

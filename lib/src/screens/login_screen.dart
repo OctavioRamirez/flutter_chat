@@ -100,10 +100,11 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixins {
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
             toggleSpinner(true);
-            var user = await Authenticator().logInUser(
-                email: _emailFieldController.text,
-                password: _passwordFieldController.text);
-            if (user != null) {
+            var user = await Authenticator()
+                .logInUser(
+                    email: _emailFieldController.text,
+                    password: _passwordFieldController.text)
+                .then((_) {
               Navigator.pushNamed(context, '/chat');
               // _emailFieldController.text = '';
               _passwordFieldController.text = '';
@@ -113,9 +114,11 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixins {
               } else {
                 FocusScope.of(context).requestFocus(_focusNodeEmail);
               }
-            } else {
+            }).catchError((e) {
+              print(e);
               setState(() => _autoValidate = true);
-            }
+            });
+
             toggleSpinner(false);
           }
         },
