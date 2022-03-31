@@ -44,31 +44,30 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixins {
   Widget build(BuildContext context) {
     return Scaffold(
         body: ModalProgressHUD(
-      inAsyncCall: _isLoading,
-      child: Form(
-          key: _formKey,
-          child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  AppIcon(),
-                  SizedBox(
-                    height: 48.0,
-                  ),
-                  _emailField(),
-                  SizedBox(
-                    height: 8.0,
-                  ),
-                  _passwordField(),
-                  SizedBox(
-                    height: 23.0,
-                  ),
-                  _submitField()
-                ],
-              ))),
-    ));
+            inAsyncCall: _isLoading,
+            child: Form(
+                key: _formKey,
+                child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        AppIcon(),
+                        SizedBox(
+                          height: 48.0,
+                        ),
+                        _emailField(),
+                        SizedBox(
+                          height: 8.0,
+                        ),
+                        _passwordField(),
+                        SizedBox(
+                          height: 23.0,
+                        ),
+                        _submitField()
+                      ],
+                    )))));
   }
 
   Widget _emailField() {
@@ -114,10 +113,10 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixins {
               } else {
                 FocusScope.of(context).requestFocus(_focusNodeEmail);
               }
-              toggleSpinner(false);
             } else {
               setState(() => _autoValidate = true);
             }
+            toggleSpinner(false);
           }
         },
         name: 'Log in');

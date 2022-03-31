@@ -5,6 +5,7 @@ import 'package:flutter_chat/src/Widgets/app_textfield.dart';
 import 'package:flutter_chat/src/mixins/validation_mixin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_chat/src/services/authentication.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const String routerName = '/registration';
@@ -17,6 +18,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _focusNodeEmail = FocusNode();
+  bool _isLoading = false;
   bool _autoValidate = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
@@ -27,31 +29,38 @@ class _RegistrationScreenState extends State<RegistrationScreen>
     _passwordController.dispose();
   }
 
+  void toggleSpinner(bool status) {
+    setState(() {
+      _isLoading = status;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Form(
-            key: _formKey,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  AppIcon(),
-                  SizedBox(
-                    height: 48.0,
-                  ),
-                  _emailField(),
-                  SizedBox(height: 8.0),
-                  _passwordField(),
-                  SizedBox(
-                    height: 48.0,
-                  ),
-                  _submitButton()
-                ],
-              ),
-            )));
+        body: ModalProgressHUD(
+            inAsyncCall: _isLoading,
+            child: Form(
+                key: _formKey,
+                child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        AppIcon(),
+                        SizedBox(
+                          height: 48.0,
+                        ),
+                        _emailField(),
+                        SizedBox(height: 8.0),
+                        _passwordField(),
+                        SizedBox(
+                          height: 48.0,
+                        ),
+                        _submitButton()
+                      ],
+                    )))));
   }
 
   Widget _emailField() {
@@ -81,6 +90,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
     return AppButton(
       color: Colors.blueAccent,
       onPressed: () async {
+        toggleSpinner(true);
         if (_formKey.currentState!.validate()) {
           var newUser = await Authenticator().createUser(
               email: _emailController.text, password: _passwordController.text);
@@ -93,6 +103,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
         } else {
           setState(() => _autoValidate = true);
         }
+        toggleSpinner(false);
       },
       name: "Registrarse",
     );
