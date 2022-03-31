@@ -62,7 +62,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
       onChanged: (value) {},
       controller: _emailController,
       focusNode: _focusNodeEmail,
-      autoValidate: true,
+      autoValidate: _autoValidate,
     );
   }
 
@@ -73,7 +73,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
       obscureText: true,
       onChanged: (value) {},
       controller: _passwordController,
-      autoValidate: true,
+      autoValidate: _autoValidate,
     );
   }
 
