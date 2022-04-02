@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat/src/Widgets/app_button.dart';
+import 'package:flutter_chat/src/Widgets/app_error_message.dart';
 import 'package:flutter_chat/src/Widgets/app_icon.dart';
 import 'package:flutter_chat/src/Widgets/app_textfield.dart';
 import 'package:flutter_chat/src/mixins/validation_mixin.dart';
@@ -25,6 +26,8 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixins {
   final FocusNode _focusNodePassword = FocusNode();
   bool _isLoading = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late String _errorMessage = '';
+
   @override
   void dispose() {
     super.dispose();
@@ -75,6 +78,10 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixins {
                         _emailField(),
                         SizedBox(
                           height: 8.0,
+                        ),
+                        _showErrorMessage(),
+                        SizedBox(
+                          height: 23.0,
                         ),
                         _passwordField(),
                         SizedBox(
@@ -130,12 +137,25 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixins {
                 FocusScope.of(context).requestFocus(_focusNodeEmail);
               }
             } else {
-              _showSnackBarMessage(authRequest.errorMessage);
+              toggleSpinner(false);
+              setState(() {
+                _errorMessage = authRequest.errorMessage;
+              });
             }
 
             toggleSpinner(false);
           }
         },
         name: 'Log in');
+  }
+
+  Widget _showErrorMessage() {
+    if (_errorMessage.length > 0 && _errorMessage != null) {
+      return ErrorMessage(errorMessage: _errorMessage);
+    } else {
+      return Container(
+        height: 0.0,
+      );
+    }
   }
 }
