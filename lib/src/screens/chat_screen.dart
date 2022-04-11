@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat/src/services/authentication.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatScreen extends StatefulWidget {
   static const String routeName = '/chat';
@@ -10,6 +11,8 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  late FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late CollectionReference _messages = _firestore.collection('messages');
   late User? currentUser;
   InputDecoration _messageTextFieldDecoration = InputDecoration(
       contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
