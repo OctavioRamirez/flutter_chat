@@ -26,6 +26,8 @@ class _ChatScreenState extends State<ChatScreen> {
       fontWeight: FontWeight.bold,
       fontSize: 18.0);
 
+  TextEditingController _messageController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -58,13 +60,20 @@ class _ChatScreenState extends State<ChatScreen> {
                   Expanded(
                       child: TextField(
                     decoration: _messageTextFieldDecoration,
+                    controller: _messageController,
                   )),
                   TextButton(
                     child: Text(
                       "Enviar",
                       style: _sendButtonStyle,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      print(_messageController.value);
+                      _messages.add({
+                        'value': _messageController.text,
+                        'sender': currentUser?.email
+                      });
+                    },
                   )
                 ],
               ),
