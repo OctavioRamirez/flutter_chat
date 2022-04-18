@@ -75,6 +75,16 @@ class _ChatScreenState extends State<ChatScreen> {
       body: SafeArea(
         child: Column(
           children: <Widget>[
+            StreamBuilder(
+                stream: MessageServices().getMessageStream(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Flexible(
+                        child: ListView(
+                      children: _getChatItems(snapshot.data.docs),
+                    ));
+                  }
+                }),
             Container(
               decoration: _messageContainerDecoration,
               child: Row(
@@ -95,6 +105,8 @@ class _ChatScreenState extends State<ChatScreen> {
                         'value': _messageController.text,
                         'sender': currentUser?.email
                       });
+                      _messageController
+                          .clear(); //limpia la caja despues de enviar
                     },
                   )
                 ],
@@ -103,6 +115,62 @@ class _ChatScreenState extends State<ChatScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  List<ChatItem> _getChatItems(dynamic messages) {
+    List<ChatItem> chatItems = [];
+    for (var message in messages) {
+      final messageValue = message.data["value"];
+      final messageSender = message.data["sender"];
+      chatItems.add(ChatItem(
+        message: messageValue,
+        sender: messageSender,
+        isLoggedInUser: messageSender == loggedInUser.email,
+      ));
+    }
+    return chatItems;
+  }
+}
+
+class ChatItem extends StatelessWidget {
+  late final String sender;
+  late final String message;
+  late final bool isLoggedInUser;
+
+  ChatItem(
+      {required this.sender,
+      required this.message,
+      required this.isLoggedInUser});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(10.0),
+      child:
+          Column(crossAxisAlignment: CrossAxisAlignment.end, children: <Widget>[
+        Material(
+            borderRadius: BorderRadius.circular(30.0),
+            child: Text(
+              sender,
+              style: TextStyle(fontSize: 15.0, color: Colors.black54),
+            )),
+        Material(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30.0),
+                bottomLeft: Radius.circular(30.0),
+                bottomRight: Radius.circular(30.0)),
+            elevation: 5.0,
+            color: isLoggedInUser ? Colors.lightBlueAccent : Colors.white,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              child: Text(
+                message,
+                style: TextStyle(
+                    fontSize: 16.0,
+                    color: isLoggedInUser ? Colors.white : Colors.black54),
+              ),
+            )),
+      ]),
     );
   }
 }
