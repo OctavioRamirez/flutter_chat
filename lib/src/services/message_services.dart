@@ -19,4 +19,8 @@ class MessageServices {
       });
     });
   }
+
+  Stream<QuerySnapshot> getMessageStream() {
+    return _fireStore.collection("messages").snapshots();
+  }
 }

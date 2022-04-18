@@ -45,6 +45,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     getCurrentUser();
+    _getMessage();
   }
 
   void getCurrentUser() async {
@@ -52,9 +53,10 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _getMessage() async {
-    final messages = await MessageServices().getMessage();
-    for (var message in messages.doc) {
-      print(message.data);
+    await for (var snapshot in MessageServices().getMessageStream()) {
+      for (var message in snapshot.docs) {
+        print(message.data);
+      }
     }
   }
 

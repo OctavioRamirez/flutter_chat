@@ -7,6 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_chat/src/services/authentication.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
+import '../Widgets/app_error_message.dart';
+
 class RegistrationScreen extends StatefulWidget {
   static const String routerName = '/registration';
   @override
@@ -20,6 +22,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
   final FocusNode _focusNodeEmail = FocusNode();
   bool _isLoading = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late String _errorMessage = '';
   @override
   void dispose() {
     super.dispose();
@@ -72,6 +75,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
                         SizedBox(
                           height: 48.0,
                         ),
+                        _showErrorMessage(),
                         _submitButton()
                       ],
                     )))));
@@ -115,12 +119,24 @@ class _RegistrationScreenState extends State<RegistrationScreen>
             FocusScope.of(context).requestFocus(_focusNodeEmail);
             Navigator.pushNamed(context, '/chat');
           } else {
-            _showSnackBarMessage(authRequest.errorMessage);
+            setState(() {
+              _errorMessage = authRequest.errorMessage;
+            });
           }
         }
         toggleSpinner(false);
       },
       name: "Registrarse",
     );
+  }
+
+  Widget _showErrorMessage() {
+    if (_errorMessage.length > 0 && _errorMessage != null) {
+      return ErrorMessage(errorMessage: _errorMessage);
+    } else {
+      return Container(
+        height: 0.0,
+      );
+    }
   }
 }
