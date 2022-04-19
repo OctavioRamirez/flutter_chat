@@ -77,13 +77,14 @@ class _ChatScreenState extends State<ChatScreen> {
           children: <Widget>[
             StreamBuilder(
                 stream: MessageServices().getMessageStream(),
-                builder: (context, snapshot) {
+                builder: (context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
                     return Flexible(
                         child: ListView(
                       children: _getChatItems(snapshot.data.docs),
                     ));
                   }
+                  return Text("Cargando");
                 }),
             Container(
               decoration: _messageContainerDecoration,
@@ -121,12 +122,12 @@ class _ChatScreenState extends State<ChatScreen> {
   List<ChatItem> _getChatItems(dynamic messages) {
     List<ChatItem> chatItems = [];
     for (var message in messages) {
-      final messageValue = message.data["value"];
-      final messageSender = message.data["sender"];
+      final messageValue = message["value"];
+      final messageSender = message["sender"];
       chatItems.add(ChatItem(
         message: messageValue,
         sender: messageSender,
-        isLoggedInUser: messageSender == loggedInUser.email,
+        isLoggedInUser: messageSender == currentUser!.email,
       ));
     }
     return chatItems;
